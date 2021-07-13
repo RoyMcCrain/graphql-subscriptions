@@ -1,24 +1,47 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+```
+bundle install
+bundle exec rails db:create
+bundle exec rails db:migrate
+bundle exec rails db:seed_fu
 
-Things you may want to cover:
+bundle exec rails s
+```
 
-* Ruby version
+```
+yarn global add wscat
 
-* System dependencies
+wscat -c localhost:3001/cable -o http://localhost:3001
+```
 
-* Configuration
+ws送信用json
+```json
+{"command": "subscribe", "identifier": "{\"channel\":\"GraphqlChannel\"}"}
+```
 
-* Database creation
+```json
+{"command":"message","identifier":"{\"channel\":\"GraphqlChannel\"}","data":"{\"action\":\"execute\", \"query\": \"subscription Msg($attr: MessageSubscribeInput) { messageSubscribe(attr: $attr) { messages { body } } }\", \"variables\": {\"attr\": {\"roomId\": 1} } }"}
+```
 
-* Database initialization
+mutation
+```graphql
+mutation msg($attr: PostedInput!) {
+  postedMessage(input: {attr: $attr}) {
+    message {
+      body
+    }
+  }
+}
 
-* How to run the test suite
+{
+  "attr": {
+    "body": "bbb",
+    "userId": "1",
+    "roomId": "1"
+  }
+}
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+で確認できた
 
-* Deployment instructions
-
-* ...
